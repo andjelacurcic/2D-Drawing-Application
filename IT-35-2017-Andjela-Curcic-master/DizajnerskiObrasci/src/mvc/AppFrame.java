@@ -77,11 +77,17 @@ public class AppFrame extends JFrame {
 	private JButton btnReadCommand = new JButton("Ucitaj komandu");
 	
 
+	
 	private final JPanel pnlLog = new JPanel();
 	
 	private final JPanel panel_2 = new JPanel();
 	private final JLabel lblNewLabel = new JLabel("Dizajnerski obrasci Andjela Curcic IT35/2017");
 	
+	private AppController controller;
+	
+	public void setController(AppController controller) {
+		this.controller = controller;
+	}
 	public AppView getView() {
 		return view;
 	}
@@ -102,6 +108,10 @@ public class AppFrame extends JFrame {
 
 	}
 	
+	
+	
+	
+	
 	public AppFrame() {
 		setBackground(Color.GRAY);
 		
@@ -113,13 +123,13 @@ public class AppFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0,0,0,0));
 		contentPane.setLayout(new BorderLayout(0,0));
-		
 		setContentPane(contentPane);
 		
 		view.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(e);
+				controller.state(e);
 			}
 		});
 		
@@ -143,6 +153,7 @@ public class AppFrame extends JFrame {
 		gbc_btnShapePoint.gridy = 1;
 		btnShapePoint.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapePoint, gbc_btnShapePoint);
+		
 		btnsShapes.add(btnShapePoint);
 		
 		GridBagConstraints gbc_btnShapeLine = new GridBagConstraints();
@@ -438,7 +449,7 @@ public class AppFrame extends JFrame {
 	private ActionListener edgeColorChooser() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color edgeColor = JColorChooser.showDialog(null, "izaberite boju ivice",Color.BLACK);
+				Color edgeColor = JColorChooser.showDialog(null, "izaberite boju ivice",controller.getEdgeColor());
 				if (edgeColor != null) {
 					
 					btnColorEdge.setBackground(edgeColor);
@@ -450,7 +461,7 @@ public class AppFrame extends JFrame {
 	private ActionListener innerColorChooser() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color innerColor = JColorChooser.showDialog(null, "izaberite boju unustrasnjosti",Color.BLACK);
+				Color innerColor = JColorChooser.showDialog(null, "izaberite boju unustrasnjosti",controller.getInnerColor());
 				if (innerColor != null) {
 					
 					btnColorInner.setBackground(innerColor);

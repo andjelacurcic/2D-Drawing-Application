@@ -9,7 +9,18 @@ public class AppModel {
 	
 	private ArrayList<Shape> shapes = new ArrayList<>();
 	private int i;
+	private Point startPoint;
 	
+	
+	
+	public Point getStartPoint() {
+		return startPoint;
+	}
+
+	public void setStartPoint(Point startPoint) {
+		this.startPoint = startPoint;
+	}
+
 	public void addShape(Shape shape) {
 		shapes.add(shape);
 	}
