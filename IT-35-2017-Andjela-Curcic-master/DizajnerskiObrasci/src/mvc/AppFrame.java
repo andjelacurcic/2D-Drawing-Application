@@ -300,7 +300,7 @@ public class AppFrame extends JFrame {
 		btnEdit.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				controller.edit(e);
 			}
 		});
 		gbc_btnEdit.fill = GridBagConstraints.BOTH;

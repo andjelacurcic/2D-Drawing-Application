@@ -7,17 +7,29 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
 
+import adapter.HexagonAdapter;
 import commands.AddShapeCmd;
 import commands.DeleteShapesCmd;
+import commands.UpdateCircleCmd;
+import commands.UpdateDonutCmd;
+import commands.UpdateHexagonCmd;
+import commands.UpdateLineCmd;
+import commands.UpdatePointCmd;
+import commands.UpdateRectangleCmd;
 import dialogs.DlgCircle;
 import dialogs.DlgDonut;
 import dialogs.DlgHexagon;
+import dialogs.DlgLine;
+import dialogs.DlgPoint;
 import dialogs.DlgRectangle;
 
 import java.awt.event.ActionEvent;
 
+import shapes.Circle;
+import shapes.Donut;
 import shapes.Line;
 import shapes.Point;
+import shapes.Rectangle;
 import shapes.Shape;
 
 public class AppController {
@@ -55,8 +67,7 @@ public class AppController {
 		}
 		else if(frame.getStateFrame()=="draw") {
 			frame.getBtnOperationDrawing().setSelected(true);
-			frame.getBtnOperationSelect().setDisabledIcon(null);
-		model.getShapes().forEach(shape -> {
+		model.getSelectedShapes().forEach(shape -> {
 			shape.setSelected(false);
 		});
 		if(frame.getBtnShapePoint().isSelected()) {
@@ -207,6 +218,92 @@ public void selectOperation(MouseEvent e) {
 	Shape shape = model.getShape(index);
 }
 
+public void edit(ActionEvent e) {
+	if(model.getSelectedShapes().size() > 1) {
+		return;
+	} else {
+		int index = model.getSelected();
+		Shape shape = model.getShape(index);
+		
+		if(shape instanceof Point) {
+			DlgPoint dlgPoint = new DlgPoint();
+			dlgPoint.setPoint((Point)shape);
+			dlgPoint.setVisible(true);
+			
+			if(dlgPoint.getPoint()!=null) {
+				frame.getBtnColorEdge().setBackground(dlgPoint.getEdgeColor());
+				UpdatePointCmd updatePointCmd = new UpdatePointCmd((Point)shape,dlgPoint.getPoint());
+				updatePointCmd.execute();
+				frame.getView().repaint();
+			}
+		}
+		else if(shape instanceof Line) {
+			DlgLine dlgLine = new DlgLine();
+			dlgLine.setLine((Line)shape);
+			dlgLine.setVisible(true);
+		
+			if(dlgLine.getLine()!= null) {
+				frame.getBtnColorEdge().setBackground(dlgLine.getEdgeColor());
+				UpdateLineCmd updateLineCmd = new UpdateLineCmd((Line)shape,dlgLine.getLine());
+				updateLineCmd.execute();
+				frame.getView().repaint();
+			}
+		}
+		else if(shape instanceof Rectangle) {
+			DlgRectangle dlgRec= new DlgRectangle();
+			dlgRec.setRectangle((Rectangle)shape);
+			dlgRec.setVisible(true);
+			if(dlgRec.getRectangle()!=null) {
+				frame.getBtnColorEdge().setBackground(dlgRec.getEdgeColor());
+				frame.getBtnColorInner().setBackground(dlgRec.getInnerColor());
+				UpdateRectangleCmd updateRecCmd = new UpdateRectangleCmd((Rectangle)shape, dlgRec.getRectangle());
+				updateRecCmd.execute();
+				frame.getView().repaint();
+			}
+		}
+		else if(shape instanceof Circle) {
+			DlgCircle dlgCircle = new DlgCircle();
+			dlgCircle.setCircle((Circle) shape);
+			dlgCircle.setVisible(true);
+			
+			if(dlgCircle.getCircle() != null) {
+				frame.getBtnColorEdge().setBackground(dlgCircle.getEdgeColor());
+				frame.getBtnColorInner().setBackground(dlgCircle.getInnerColor());
+				UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd((Circle)shape,dlgCircle.getCircle());
+				updateCircleCmd.execute();
+				frame.getView().repaint();
+			}
+		}
+		else if(shape instanceof Donut) {
+			DlgDonut dlgDonut = new DlgDonut();
+			dlgDonut.setDonut((Donut) shape);
+			dlgDonut.setVisible(true);
+			
+			if(dlgDonut.getDonut()!=null) {
+				frame.getBtnColorEdge().setBackground(dlgDonut.getEdgeColor());
+				frame.getBtnColorInner().setBackground(dlgDonut.getInnerColor());
+				UpdateDonutCmd updateDonutCmd = new UpdateDonutCmd((Donut) shape,dlgDonut.getDonut());
+				updateDonutCmd.execute();
+				frame.getView().repaint();
+
+			}
+		}
+		else if(shape instanceof HexagonAdapter) {
+			DlgHexagon dlgHexagon  = new DlgHexagon();
+			dlgHexagon.setHexagon((HexagonAdapter)shape);
+			dlgHexagon.setVisible(true);
+			if(dlgHexagon.getHexagon()!=null) {
+				frame.getBtnColorEdge().setBackground(dlgHexagon.getEdgeColor());
+				frame.getBtnColorInner().setBackground(dlgHexagon.getInnerColor());
+				UpdateHexagonCmd updateHexagonCmd = new UpdateHexagonCmd((HexagonAdapter)shape,dlgHexagon.getHexagon());
+				updateHexagonCmd.execute();
+				frame.getView().repaint();
+
+			}
+		}
+	}
+}
+
 
 	public void delete(ActionEvent e) {
 		System.out.println("delete");
@@ -229,6 +326,8 @@ public void selectOperation(MouseEvent e) {
 	public Color getInnerColor() {
 		return innerColor;
 	}
+
+	
 
 	
 	
