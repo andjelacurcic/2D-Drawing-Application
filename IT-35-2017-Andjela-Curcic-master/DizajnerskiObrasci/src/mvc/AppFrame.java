@@ -85,6 +85,14 @@ public class AppFrame extends JFrame {
 	
 	private AppController controller;
 	
+	private String stateFrame = "draw";
+	
+	public String getStateFrame() {
+		return stateFrame;
+	}
+	public void setStateFrame(String stateFrame) {
+		this.stateFrame = stateFrame;
+	}
 	public void setController(AppController controller) {
 		this.controller = controller;
 	}
@@ -109,9 +117,6 @@ public class AppFrame extends JFrame {
 	}
 	
 	
-	
-	
-	
 	public AppFrame() {
 		setBackground(Color.GRAY);
 		
@@ -129,7 +134,7 @@ public class AppFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e);
-				controller.state(e);
+				controller.stateController(e);
 			}
 		});
 		
@@ -153,7 +158,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapePoint.gridy = 1;
 		btnShapePoint.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapePoint, gbc_btnShapePoint);
-		
+		btnShapePoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapePoint);
 		
 		GridBagConstraints gbc_btnShapeLine = new GridBagConstraints();
@@ -163,6 +172,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapeLine.gridy = 3;
 		btnShapeLine.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapeLine, gbc_btnShapeLine);
+		btnShapeLine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapeLine);
 		
 		GridBagConstraints gbc_btnShapeCircle = new GridBagConstraints();
@@ -172,6 +186,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapeCircle.gridy = 5;
 		btnShapeCircle.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapeCircle, gbc_btnShapeCircle);
+		btnShapeCircle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapeCircle);
 	
 		GridBagConstraints gbc_btnShapeRectangle = new GridBagConstraints();
@@ -181,6 +200,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapeRectangle.gridy = 7;
 		btnShapeRectangle.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapeRectangle, gbc_btnShapeRectangle);
+		btnShapeRectangle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapeRectangle);
 	
 		GridBagConstraints gbc_btnShapeDonut = new GridBagConstraints();
@@ -190,6 +214,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapeDonut.gridy = 9;
 		btnShapeDonut.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapeDonut, gbc_btnShapeDonut);
+		btnShapeDonut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapeDonut);
 		
 		GridBagConstraints gbc_btnShapeHexagon = new GridBagConstraints();
@@ -199,6 +228,11 @@ public class AppFrame extends JFrame {
 		gbc_btnShapeHexagon.gridy = 11;
 		btnShapeHexagon.setFont(new Font("Verdana", Font.BOLD, 12));
 		panel.add(btnShapeHexagon, gbc_btnShapeHexagon);
+		btnShapeHexagon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStateFrame("draw");
+			}
+		});
 		btnsShapes.add(btnShapeHexagon);
 		
 		GridBagConstraints gbc_btnColorEdge = new GridBagConstraints();
@@ -251,7 +285,7 @@ public class AppFrame extends JFrame {
 		btnOperationSelect.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnOperationSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				stateFrame = "edit";
 			}
 		});
 		btnsOperation.add(btnOperationSelect);
@@ -280,7 +314,10 @@ public class AppFrame extends JFrame {
 		btnDelete.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				controller.delete(e);
+				stateFrame = "edit";
+				getView().repaint();
+
 			}
 		});
 		gbc_btnDelete.fill = GridBagConstraints.BOTH;

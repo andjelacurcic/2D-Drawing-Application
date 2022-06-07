@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
+
 import commands.AddShapeCmd;
+import commands.DeleteShapesCmd;
 import dialogs.DlgCircle;
 import dialogs.DlgDonut;
 import dialogs.DlgHexagon;
@@ -15,6 +18,7 @@ import java.awt.event.ActionEvent;
 
 import shapes.Line;
 import shapes.Point;
+import shapes.Shape;
 
 public class AppController {
 	
@@ -33,12 +37,30 @@ public class AppController {
 		this.frame = frame;
 		
 		this.innerColor = Color.WHITE;
-		this.edgeColor = Color.WHITE;
+		this.edgeColor = Color.BLACK;
+	}
+	
+	public void stateController(MouseEvent e) {
+		state(e);
+		frame.getView().repaint();
 	}
 	
 	public void state(MouseEvent e) {
 		
+		if(frame.getStateFrame()=="edit") {
+	
+		if(frame.getBtnOperationSelect().isSelected()) {
+			selectOperation(e);
+		}
+		}
+		else if(frame.getStateFrame()=="draw") {
+			frame.getBtnOperationDrawing().setSelected(true);
+			frame.getBtnOperationSelect().setDisabledIcon(null);
+		model.getShapes().forEach(shape -> {
+			shape.setSelected(false);
+		});
 		if(frame.getBtnShapePoint().isSelected()) {
+			
 			
 			drawPoint(e);
 		}
@@ -57,9 +79,10 @@ public class AppController {
 		if(frame.getBtnShapeHexagon().isSelected()) {
 			drawHexagon(e);
 		}
-		if(frame.getBtnOperationSelect().isSelected()) {
-			select(e);
+		
 		}
+		
+			
 	}
 	
 	
@@ -154,12 +177,46 @@ public void drawHexagon(MouseEvent e) {
 	} 
 }
 
-public void select(MouseEvent e) {
+public void selectOperation(MouseEvent e) {
 	
+	
+	frame.getBtnsShapes().clearSelection();
+	
+	model.getShapes().forEach(shape -> {
+		if(shape.contains(e.getX(), e.getY())) {
+			if(shape.isSelected()) {
+			shape.setSelected(false);
+			}
+			else {
+				shape.setSelected(true);
+				shape.isSelected();
+			}
+		}
+	});
+	
+	/*model.getShapes().forEach(shape -> {
+		if(shape.contains(e.getX(), e.getY())) {
+			shape.setSelected(true);
+			shape.isSelected();
+		}
+	});*/
+	frame.getView().repaint();
+	int index = model.getSelected();
+	if(index == -1) return;
+	
+	Shape shape = model.getShape(index);
 }
 
 
-	
+	public void delete(ActionEvent e) {
+		System.out.println("delete");
+		if(model.isEmpty())
+			return;
+		if(JOptionPane.showConfirmDialog(null, "Da li zaista zelite da obrisete?","Potvrda", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE)==0) {
+			DeleteShapesCmd deleteShapesCmd = new DeleteShapesCmd(model.getSelectedShapes(),model);
+			deleteShapesCmd.execute();
+		}
+	}
 	
 	
 
