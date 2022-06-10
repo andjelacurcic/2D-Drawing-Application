@@ -61,7 +61,7 @@ public class AppFrame extends JFrame {
 	private JButton btnColorEdge = new JButton("Boja ivice");
 	
 	private JButton btnColorInner = new JButton("Boja unutrasnjosti");
-	private JToggleButton btnOperationDrawing = new JToggleButton("Crtaj");
+	private JToggleButton btnOperationDrawing = new JToggleButton("Crtanje");
 	private JToggleButton btnOperationSelect = new JToggleButton("Selektuj");
 	private JButton btnEdit = new JButton("Izmeni");
 	private JButton btnDelete = new JButton("Obrisi");
@@ -144,7 +144,7 @@ public class AppFrame extends JFrame {
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{153, 0};
+		gbl_panel.columnWidths = new int[]{133, 0};
 		gbl_panel.rowHeights = new int[]{59, 43, 21, 39, 21, 39, 21, 42, 27, 40, 18, 39, 47, 49, 44, 0};
 		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -257,9 +257,9 @@ public class AppFrame extends JFrame {
 		panel_1.setBackground(Color.GRAY);
 		contentPane.add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{44, 109, 0, 112, 31, 0};
-		gbl_panel_1.rowHeights = new int[]{21, 27, 43, 20, 40, 19, 41, 18, 42, 0, 42, 52, 39, 0, 42, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.columnWidths = new int[]{94, 0, 76, 0};
+		gbl_panel_1.rowHeights = new int[]{21, 27, 20, 44, 40, 19, 41, 18, 42, 0, 42, 52, 39, 0, 42, 0};
+		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
@@ -275,10 +275,19 @@ public class AppFrame extends JFrame {
 		gbc_btnOperationDrawing.fill = GridBagConstraints.BOTH;
 		gbc_btnOperationDrawing.insets = new Insets(0, 0, 5, 5);
 		gbc_btnOperationDrawing.gridx = 1;
-		gbc_btnOperationDrawing.gridy = 2;
+		gbc_btnOperationDrawing.gridy = 1;
 		panel_1.add(btnOperationDrawing, gbc_btnOperationDrawing);
 		btnsOperation.add(btnOperationDrawing);
 		btnOperationDrawing.setSelected(true);
+		
+		
+		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
+		btnEdit.setFont(new Font("Verdana", Font.BOLD, 12));
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.edit(e);
+			}
+		});
 		
 		
 		GridBagConstraints gbc_btnOperationSelect = new GridBagConstraints();
@@ -291,21 +300,12 @@ public class AppFrame extends JFrame {
 		btnsOperation.add(btnOperationSelect);
 		gbc_btnOperationSelect.fill = GridBagConstraints.BOTH;
 		gbc_btnOperationSelect.insets = new Insets(0, 0, 5, 5);
-		gbc_btnOperationSelect.gridx = 3;
-		gbc_btnOperationSelect.gridy = 2;
+		gbc_btnOperationSelect.gridx = 1;
+		gbc_btnOperationSelect.gridy = 3;
 		panel_1.add(btnOperationSelect, gbc_btnOperationSelect);
-		
-		
-		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
-		btnEdit.setFont(new Font("Verdana", Font.BOLD, 12));
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				controller.edit(e);
-			}
-		});
 		gbc_btnEdit.fill = GridBagConstraints.BOTH;
 		gbc_btnEdit.insets = new Insets(0, 0, 5, 5);
-		gbc_btnEdit.gridx = 1;
+		gbc_btnEdit.gridx = 0;
 		gbc_btnEdit.gridy = 4;
 		panel_1.add(btnEdit, gbc_btnEdit);
 		
@@ -321,8 +321,8 @@ public class AppFrame extends JFrame {
 			}
 		});
 		gbc_btnDelete.fill = GridBagConstraints.BOTH;
-		gbc_btnDelete.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDelete.gridx = 3;
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
+		gbc_btnDelete.gridx = 2;
 		gbc_btnDelete.gridy = 4;
 		panel_1.add(btnDelete, gbc_btnDelete);
 		
@@ -337,7 +337,7 @@ public class AppFrame extends JFrame {
 		btnUndo.setVisible(false);
 		gbc_btnUndo.fill = GridBagConstraints.BOTH;
 		gbc_btnUndo.insets = new Insets(0, 0, 5, 5);
-		gbc_btnUndo.gridx = 1;
+		gbc_btnUndo.gridx = 0;
 		gbc_btnUndo.gridy = 6;
 		panel_1.add(btnUndo, gbc_btnUndo);
 		
@@ -351,8 +351,8 @@ public class AppFrame extends JFrame {
 		});
 		btnRedo.setVisible(false);
 		gbc_btnRedo.fill = GridBagConstraints.BOTH;
-		gbc_btnRedo.insets = new Insets(0, 0, 5, 5);
-		gbc_btnRedo.gridx = 3;
+		gbc_btnRedo.insets = new Insets(0, 0, 5, 0);
+		gbc_btnRedo.gridx = 2;
 		gbc_btnRedo.gridy = 6;
 		panel_1.add(btnRedo, gbc_btnRedo);
 		
@@ -361,12 +361,12 @@ public class AppFrame extends JFrame {
 		btnToFront.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.toFront();
 			}
 		});
 		gbc_btnToFront.fill = GridBagConstraints.BOTH;
 		gbc_btnToFront.insets = new Insets(0, 0, 5, 5);
-		gbc_btnToFront.gridx = 1;
+		gbc_btnToFront.gridx = 0;
 		gbc_btnToFront.gridy = 8;
 		panel_1.add(btnToFront, gbc_btnToFront);
 		
@@ -375,12 +375,12 @@ public class AppFrame extends JFrame {
 		btnBringToFront.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnBringToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.bringToFront();
 			}
 		});
 		gbc_btnBringToFront.fill = GridBagConstraints.BOTH;
-		gbc_btnBringToFront.insets = new Insets(0, 0, 5, 5);
-		gbc_btnBringToFront.gridx = 3;
+		gbc_btnBringToFront.insets = new Insets(0, 0, 5, 0);
+		gbc_btnBringToFront.gridx = 2;
 		gbc_btnBringToFront.gridy = 8;
 		panel_1.add(btnBringToFront, gbc_btnBringToFront);
 		
@@ -389,12 +389,12 @@ public class AppFrame extends JFrame {
 		btnToBack.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.toBack();
 			}
 		});
 		gbc_btnToBack.fill = GridBagConstraints.BOTH;
 		gbc_btnToBack.insets = new Insets(0, 0, 5, 5);
-		gbc_btnToBack.gridx = 1;
+		gbc_btnToBack.gridx = 0;
 		gbc_btnToBack.gridy = 10;
 		panel_1.add(btnToBack, gbc_btnToBack);
 		
@@ -403,12 +403,12 @@ public class AppFrame extends JFrame {
 		btnBringToBack.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnBringToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.bringToBack();
 			}
 		});
-		gbc_btnBringToBack.insets = new Insets(0, 0, 5, 5);
+		gbc_btnBringToBack.insets = new Insets(0, 0, 5, 0);
 		gbc_btnBringToBack.fill = GridBagConstraints.BOTH;
-		gbc_btnBringToBack.gridx = 3;
+		gbc_btnBringToBack.gridx = 2;
 		gbc_btnBringToBack.gridy = 10;
 		panel_1.add(btnBringToBack, gbc_btnBringToBack);
 		
@@ -431,12 +431,12 @@ public class AppFrame extends JFrame {
 		});
 		gbc_btnOpenFile.fill = GridBagConstraints.BOTH;
 		gbc_btnOpenFile.insets = new Insets(0, 0, 5, 5);
-		gbc_btnOpenFile.gridx = 1;
+		gbc_btnOpenFile.gridx = 0;
 		gbc_btnOpenFile.gridy = 12;
 		panel_1.add(btnOpenFile, gbc_btnOpenFile);
 		gbc_btnSaveFile.fill = GridBagConstraints.BOTH;
-		gbc_btnSaveFile.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSaveFile.gridx = 3;
+		gbc_btnSaveFile.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSaveFile.gridx = 2;
 		gbc_btnSaveFile.gridy = 12;
 		panel_1.add(btnSaveFile, gbc_btnSaveFile);
 		
@@ -450,8 +450,7 @@ public class AppFrame extends JFrame {
 			}
 		});
 		gbc_btnReadCommand.fill = GridBagConstraints.BOTH;
-		gbc_btnReadCommand.insets = new Insets(0, 0, 0, 5);
-		gbc_btnReadCommand.gridx = 1;
+		gbc_btnReadCommand.gridx = 0;
 		gbc_btnReadCommand.gridy = 14;
 		panel_1.add(btnReadCommand, gbc_btnReadCommand);
 		btnReadCommand.setVisible(false);

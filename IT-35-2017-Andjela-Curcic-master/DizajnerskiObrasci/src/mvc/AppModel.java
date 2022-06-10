@@ -1,7 +1,9 @@
 package mvc;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
+import commands.Command;
 import shapes.Point;
 import shapes.Shape;
 
@@ -10,6 +12,8 @@ public class AppModel {
 	private ArrayList<Shape> shapes = new ArrayList<>();
 	private int i;
 	private Point startPoint;
+	private Stack<Command> undo = new Stack<>();
+	private Stack<Command> redo = new Stack<>();
 	
 	
 	

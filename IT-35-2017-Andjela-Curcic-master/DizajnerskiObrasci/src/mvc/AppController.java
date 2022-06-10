@@ -9,7 +9,11 @@ import javax.swing.JOptionPane;
 
 import adapter.HexagonAdapter;
 import commands.AddShapeCmd;
+import commands.BringToBackCmd;
+import commands.BringToFrontCmd;
 import commands.DeleteShapesCmd;
+import commands.ToBackCmd;
+import commands.ToFrontCmd;
 import commands.UpdateCircleCmd;
 import commands.UpdateDonutCmd;
 import commands.UpdateHexagonCmd;
@@ -315,6 +319,51 @@ public void edit(ActionEvent e) {
 		}
 	}
 	
+	public void toFront() {
+		
+			int index = model.getSelected();
+			
+			Shape selectedShape = model.getShape(index);
+			System.out.println(selectedShape);
+			if(index==model.getShapes().size()-1) return;
+			ToFrontCmd toFront = new ToFrontCmd(selectedShape,model);
+			toFront.execute();
+			frame.getView().repaint();
+		
+	}
+	
+	public void toBack() {
+		int index = model.getSelected();
+		
+		Shape selectedShape = model.getShape(index);
+		System.out.println(selectedShape);
+		if(index==0) return;
+		ToBackCmd toBack = new ToBackCmd(selectedShape,model);
+		toBack.execute();
+		frame.getView().repaint();
+	}
+	
+	public void bringToFront() {
+		int index = model.getSelected();
+		Shape selectedShape = model.getShape(index);
+		if(index == model.getShapes().size()-1)
+			return;
+		BringToFrontCmd bringToFrontCmd = new BringToFrontCmd(selectedShape,model);
+		bringToFrontCmd.execute();
+		frame.getView().repaint();
+	}
+
+	public void bringToBack() {
+		int index = model.getSelected();
+		Shape selectedShape = model.getShape(index);
+		if(index == 0)
+			return;
+		BringToBackCmd bringToBackCmd = new BringToBackCmd(selectedShape,model);
+		bringToBackCmd.execute();
+		frame.getView().repaint();
+		
+	}
+	
 	
 
 	public Color getEdgeColor() {
@@ -326,6 +375,10 @@ public void edit(ActionEvent e) {
 	public Color getInnerColor() {
 		return innerColor;
 	}
+
+	
+
+	
 
 	
 
