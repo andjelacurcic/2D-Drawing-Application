@@ -79,14 +79,16 @@ public class AppFrame extends JFrame {
 
 	
 	private final JPanel pnlLog = new JPanel();
-	
+	private final JList listLog = new JList();
 	private final JPanel panel_2 = new JPanel();
 	private final JLabel lblNewLabel = new JLabel("Dizajnerski obrasci Andjela Curcic IT35/2017");
-	
+	private DefaultListModel<String> defaultListModel  = new DefaultListModel<String>();
 	private AppController controller;
-	
+	private FileNameExtensionFilter drawFilter = new FileNameExtensionFilter("Crtez","draw");
+	private FileNameExtensionFilter logFilter = new FileNameExtensionFilter("Log","log");
 	private String stateFrame = "draw";
-	
+	private JFileChooser saveFileChooser;
+	private JFileChooser openFileChooser;
 	public String getStateFrame() {
 		return stateFrame;
 	}
@@ -95,6 +97,14 @@ public class AppFrame extends JFrame {
 	}
 	public void setController(AppController controller) {
 		this.controller = controller;
+	}
+	
+	
+	public JFileChooser getSaveFileChooser() {
+		return saveFileChooser;
+	}
+	public JFileChooser getOpenFileChooser() {
+		return openFileChooser;
 	}
 	public AppView getView() {
 		return view;
@@ -415,7 +425,17 @@ public class AppFrame extends JFrame {
 		btnSaveFile.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnSaveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				saveFileChooser = new JFileChooser();
+				saveFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				saveFileChooser.setFileSelectionMode(JFileChooser.SAVE_DIALOG);
+				saveFileChooser.setFileHidingEnabled(false);
+				saveFileChooser.setMultiSelectionEnabled(false);
+				saveFileChooser.enableInputMethods(false);
+				saveFileChooser.setEnabled(true);
+				saveFileChooser.setDialogTitle("sacuvaj");
+				saveFileChooser.setAcceptAllFileFilterUsed(false);
 				
+				controller.saveFile();
 			}
 		});
 		
@@ -424,7 +444,18 @@ public class AppFrame extends JFrame {
 		btnOpenFile.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnOpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				openFileChooser = new JFileChooser();
+				openFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				openFileChooser.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
+				openFileChooser.setAcceptAllFileFilterUsed(false);
+				openFileChooser.setFileHidingEnabled(false);
+				openFileChooser.setMultiSelectionEnabled(false);
+				openFileChooser.enableInputMethods(true);
+				openFileChooser.setEnabled(true);
+				openFileChooser.setFileFilter(drawFilter);
+				openFileChooser.setFileFilter(logFilter);
 				
+				controller.openFile();
 			}
 		});
 		gbc_btnOpenFile.fill = GridBagConstraints.BOTH;
@@ -457,10 +488,13 @@ public class AppFrame extends JFrame {
 		
 		
 		contentPane.add(pnlLog, BorderLayout.SOUTH);
-		
+		listLog.setModel(defaultListModel);
+		listLog.setVisibleRowCount(10);
+		listLog.setFixedCellWidth(1080);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setViewportView(listLog);
 	
 		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			
@@ -589,6 +623,12 @@ public class AppFrame extends JFrame {
 
 	
 
+	public FileNameExtensionFilter getDrawFilter() {
+		return drawFilter;
+	}
+	public FileNameExtensionFilter getLogFilter() {
+		return logFilter;
+	}
 	public JButton getBtnReadCommand() {
 		return btnReadCommand;
 	}

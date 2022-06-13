@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import adapter.HexagonAdapter;
@@ -36,6 +37,8 @@ import shapes.Line;
 import shapes.Point;
 import shapes.Rectangle;
 import shapes.Shape;
+import strategy.Context;
+import strategy.FileSerialization;
 
 public class AppController {
 	
@@ -43,6 +46,8 @@ public class AppController {
 	private AppFrame frame;
 	AddShapeCmd addShapeCmd;
 	private Point firstPoint;
+	private Context context;
+	private FileSerialization fileSerialization;
 	
 	
 	private Color edgeColor, innerColor = Color.WHITE;
@@ -53,6 +58,7 @@ public class AppController {
 		this.model = model;
 		this.frame = frame;
 		
+		this.fileSerialization = new FileSerialization(model);
 		this.innerColor = Color.WHITE;
 		this.edgeColor = Color.BLACK;
 	}
@@ -329,6 +335,8 @@ public void edit(ActionEvent e) {
 		if(JOptionPane.showConfirmDialog(null, "Da li zaista zelite da obrisete?","Potvrda", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE)==0) {
 			DeleteShapesCmd deleteShapesCmd = new DeleteShapesCmd(model.getSelectedShapes(),model);
 			deleteShapesCmd.execute();
+			model.getUndo().push(deleteShapesCmd);
+			frame.getView().repaint();
 		}
 	}
 	
@@ -341,6 +349,7 @@ public void edit(ActionEvent e) {
 			if(index==model.getShapes().size()-1) return;
 			ToFrontCmd toFront = new ToFrontCmd(selectedShape,model);
 			toFront.execute();
+			model.getUndo().push(toFront);
 			frame.getView().repaint();
 		
 	}
@@ -353,6 +362,7 @@ public void edit(ActionEvent e) {
 		if(index==0) return;
 		ToBackCmd toBack = new ToBackCmd(selectedShape,model);
 		toBack.execute();
+		model.getUndo().push(toBack);
 		frame.getView().repaint();
 	}
 	
@@ -363,6 +373,7 @@ public void edit(ActionEvent e) {
 			return;
 		BringToFrontCmd bringToFrontCmd = new BringToFrontCmd(selectedShape,model);
 		bringToFrontCmd.execute();
+		model.getUndo().push(bringToFrontCmd);
 		frame.getView().repaint();
 	}
 
@@ -373,6 +384,7 @@ public void edit(ActionEvent e) {
 			return;
 		BringToBackCmd bringToBackCmd = new BringToBackCmd(selectedShape,model);
 		bringToBackCmd.execute();
+		model.getUndo().push(bringToBackCmd);
 		frame.getView().repaint();
 		
 	}
@@ -402,7 +414,36 @@ public void edit(ActionEvent e) {
 		
 	}
 
-	
+	public void openFile() {
+		
+		if(frame.getOpenFileChooser().showSaveDialog(null)== JFileChooser.APPROVE_OPTION) {
+			
+			if(frame.getOpenFileChooser().getFileFilter().getDescription()=="Crtez") {
+				context = new Context(fileSerialization);
+		
+			}
+			context.openFile(frame.getOpenFileChooser().getSelectedFile());
+			frame.getView().repaint();
+		
+		}
+		
+		frame.getOpenFileChooser().setVisible(false);
+		
+	}
+
+	public void saveFile() {
+		if(!model.getShapes().isEmpty())
+			frame.getSaveFileChooser().setFileFilter(frame.getDrawFilter());
+		if(frame.getSaveFileChooser().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if(frame.getSaveFileChooser().getFileFilter().getDescription()=="Crtez") {
+				context = new Context(fileSerialization);
+			}
+			context.saveFile(frame.getSaveFileChooser().getSelectedFile());
+		}
+		frame.getSaveFileChooser().setVisible(false);
+		
+	}
+
 	
 
 	public Color getEdgeColor() {
@@ -415,6 +456,7 @@ public void edit(ActionEvent e) {
 		return innerColor;
 	}
 
+	
 
 	
 
