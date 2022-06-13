@@ -11,6 +11,7 @@ import adapter.HexagonAdapter;
 import commands.AddShapeCmd;
 import commands.BringToBackCmd;
 import commands.BringToFrontCmd;
+import commands.Command;
 import commands.DeleteShapesCmd;
 import commands.ToBackCmd;
 import commands.ToFrontCmd;
@@ -109,6 +110,7 @@ public class AppController {
 		point.setEdgeColor(frame.getBtnColorEdge().getBackground());
 		addShapeCmd = new AddShapeCmd(point,model);
 		addShapeCmd.execute();
+		model.getUndo().push(addShapeCmd);
 		frame.getView().repaint();
 	
 	}
@@ -122,6 +124,7 @@ public class AppController {
 		line.setEdgeColor(frame.getBtnColorEdge().getBackground());
 		addShapeCmd = new AddShapeCmd(line,model);
 		addShapeCmd.execute();
+		model.getUndo().push(addShapeCmd);
 		frame.getView().repaint();
 		model.setStartPoint(null);
 		}
@@ -140,6 +143,7 @@ public void drawRectangle(MouseEvent e) {
 			frame.getBtnColorInner().setBackground(dlgRectangle.getInnerColor());
 			addShapeCmd = new AddShapeCmd(dlgRectangle.getRectangle(),model);
 			addShapeCmd.execute();
+			model.getUndo().push(addShapeCmd);
 			frame.getView().repaint();
 		} 
 		
@@ -157,6 +161,7 @@ public void drawRectangle(MouseEvent e) {
 			frame.getBtnColorInner().setBackground(dlgCircle.getInnerColor());
 			addShapeCmd = new AddShapeCmd(dlgCircle.getCircle(),model);
 			addShapeCmd.execute();
+			model.getUndo().push(addShapeCmd);
 			frame.getView().repaint();
 		} 
 	}
@@ -173,6 +178,7 @@ public void drawDonut(MouseEvent e) {
 			frame.getBtnColorInner().setBackground(dlgDonut.getInnerColor());
 			addShapeCmd = new AddShapeCmd(dlgDonut.getDonut(),model);
 			addShapeCmd.execute();
+			model.getUndo().push(addShapeCmd);
 			frame.getView().repaint();
 		} 
 	}
@@ -187,6 +193,7 @@ public void drawHexagon(MouseEvent e) {
 		frame.getBtnColorEdge().setBackground(dlgHexagon.getEdgeColor());
 		frame.getBtnColorInner().setBackground(dlgHexagon.getInnerColor());
 		addShapeCmd = new AddShapeCmd(dlgHexagon.getHexagon(),model);
+		model.getUndo().push(addShapeCmd);
 		addShapeCmd.execute();
 		frame.getView().repaint();
 	} 
@@ -238,6 +245,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorEdge().setBackground(dlgPoint.getEdgeColor());
 				UpdatePointCmd updatePointCmd = new UpdatePointCmd((Point)shape,dlgPoint.getPoint());
 				updatePointCmd.execute();
+				model.getUndo().push(updatePointCmd);
 				frame.getView().repaint();
 			}
 		}
@@ -250,6 +258,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorEdge().setBackground(dlgLine.getEdgeColor());
 				UpdateLineCmd updateLineCmd = new UpdateLineCmd((Line)shape,dlgLine.getLine());
 				updateLineCmd.execute();
+				model.getUndo().push(updateLineCmd);
 				frame.getView().repaint();
 			}
 		}
@@ -262,6 +271,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorInner().setBackground(dlgRec.getInnerColor());
 				UpdateRectangleCmd updateRecCmd = new UpdateRectangleCmd((Rectangle)shape, dlgRec.getRectangle());
 				updateRecCmd.execute();
+				model.getUndo().push(updateRecCmd);
 				frame.getView().repaint();
 			}
 		}
@@ -275,6 +285,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorInner().setBackground(dlgCircle.getInnerColor());
 				UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd((Circle)shape,dlgCircle.getCircle());
 				updateCircleCmd.execute();
+				model.getUndo().push(updateCircleCmd);
 				frame.getView().repaint();
 			}
 		}
@@ -288,6 +299,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorInner().setBackground(dlgDonut.getInnerColor());
 				UpdateDonutCmd updateDonutCmd = new UpdateDonutCmd((Donut) shape,dlgDonut.getDonut());
 				updateDonutCmd.execute();
+				model.getUndo().push(updateDonutCmd);
 				frame.getView().repaint();
 
 			}
@@ -301,6 +313,7 @@ public void edit(ActionEvent e) {
 				frame.getBtnColorInner().setBackground(dlgHexagon.getInnerColor());
 				UpdateHexagonCmd updateHexagonCmd = new UpdateHexagonCmd((HexagonAdapter)shape,dlgHexagon.getHexagon());
 				updateHexagonCmd.execute();
+				model.getUndo().push(updateHexagonCmd);
 				frame.getView().repaint();
 
 			}
@@ -364,6 +377,32 @@ public void edit(ActionEvent e) {
 		
 	}
 	
+	public void undo() {
+		if(model.getUndo().size()==-1)
+			return;
+		if(!model.getUndo().isEmpty()) {
+			Command command = model.getUndo().pop();
+			command.unexecute();
+			model.getRedo().push(command);
+			frame.getView().repaint();
+		}
+		
+	}
+
+	public void redo() {
+		if(model.getRedo().size()==-1)
+			return;
+		if(!model.getRedo().isEmpty()) {
+			Command command = model.getRedo().pop();
+			command.execute();
+			model.getUndo().push(command);
+			frame.getView().repaint();
+		}
+		
+		
+	}
+
+	
 	
 
 	public Color getEdgeColor() {
@@ -375,6 +414,7 @@ public void edit(ActionEvent e) {
 	public Color getInnerColor() {
 		return innerColor;
 	}
+
 
 	
 

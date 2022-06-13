@@ -17,6 +17,23 @@ public class AppModel {
 	
 	
 	
+	
+	public Stack<Command> getUndo() {
+		return undo;
+	}
+
+	public void setUndo(Stack<Command> undo) {
+		this.undo = undo;
+	}
+
+	public Stack<Command> getRedo() {
+		return redo;
+	}
+
+	public void setRedo(Stack<Command> redo) {
+		this.redo = redo;
+	}
+
 	public Point getStartPoint() {
 		return startPoint;
 	}

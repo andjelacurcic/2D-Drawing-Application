@@ -331,10 +331,9 @@ public class AppFrame extends JFrame {
 		btnUndo.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.undo();
 			}
 		});
-		btnUndo.setVisible(false);
 		gbc_btnUndo.fill = GridBagConstraints.BOTH;
 		gbc_btnUndo.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUndo.gridx = 0;
@@ -346,10 +345,9 @@ public class AppFrame extends JFrame {
 		btnRedo.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.redo();
 			}
 		});
-		btnRedo.setVisible(false);
 		gbc_btnRedo.fill = GridBagConstraints.BOTH;
 		gbc_btnRedo.insets = new Insets(0, 0, 5, 0);
 		gbc_btnRedo.gridx = 2;
