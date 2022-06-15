@@ -27,6 +27,9 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentListener;
@@ -76,6 +79,8 @@ public class AppFrame extends JFrame {
 	private JButton btnSaveFile = new JButton("Sacuvaj fajl");
 	private JButton btnReadCommand = new JButton("Ucitaj komandu");
 	
+	
+	
 
 	
 	private final JPanel pnlLog = new JPanel();
@@ -100,6 +105,9 @@ public class AppFrame extends JFrame {
 	}
 	
 	
+	public DefaultListModel<String> getDefaultListModel() {
+		return defaultListModel;
+	}
 	public JFileChooser getSaveFileChooser() {
 		return saveFileChooser;
 	}
@@ -134,7 +142,7 @@ public class AppFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100,100,1000,800);
 		setLocationRelativeTo(null);
-		setMinimumSize(new Dimension(1000,600));
+		setMinimumSize(new Dimension(1200,600));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0,0,0,0));
 		contentPane.setLayout(new BorderLayout(0,0));
@@ -338,12 +346,14 @@ public class AppFrame extends JFrame {
 		
 		
 		GridBagConstraints gbc_btnUndo = new GridBagConstraints();
+		
 		btnUndo.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.undo();
 			}
 		});
+		btnUndo.setVisible(false);
 		gbc_btnUndo.fill = GridBagConstraints.BOTH;
 		gbc_btnUndo.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUndo.gridx = 0;
@@ -352,12 +362,14 @@ public class AppFrame extends JFrame {
 		
 		
 		GridBagConstraints gbc_btnRedo = new GridBagConstraints();
+		
 		btnRedo.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.redo();
 			}
 		});
+		btnRedo.setVisible(false);
 		gbc_btnRedo.fill = GridBagConstraints.BOTH;
 		gbc_btnRedo.insets = new Insets(0, 0, 5, 0);
 		gbc_btnRedo.gridx = 2;
@@ -475,7 +487,8 @@ public class AppFrame extends JFrame {
 		btnReadCommand.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnReadCommand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.read();
+				getView().repaint();
 			}
 		});
 		gbc_btnReadCommand.fill = GridBagConstraints.BOTH;
@@ -634,7 +647,6 @@ public class AppFrame extends JFrame {
 	}
 	
 	
-
 	
 	
 

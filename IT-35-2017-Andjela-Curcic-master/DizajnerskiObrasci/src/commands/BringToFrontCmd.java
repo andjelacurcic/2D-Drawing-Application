@@ -8,6 +8,16 @@ public class BringToFrontCmd implements Command{
 	private Shape shape;
 	private AppModel model;
 	private int index;
+	private String cmdLog;
+	
+	
+	public String getCmdLog() {
+		return cmdLog;
+	}
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
 	
 	
 	public BringToFrontCmd(Shape shape, AppModel model) {
@@ -20,6 +30,7 @@ public class BringToFrontCmd implements Command{
 		index = model.getIndex(shape);
 		model.remove(shape);
 		model.addShapeAtIndex(shape, model.getShapes().size());
+		cmdLog = "EXECUTE_BRING-TO-FRONT_" + shape;
 	}
 	@Override
 	public void unexecute() {
@@ -27,7 +38,7 @@ public class BringToFrontCmd implements Command{
 			return;
 		model.remove(shape);
 		model.addShapeAtIndex(shape, index);
-		
+		cmdLog = "UNEXECUTE_BRING-TO-FRONT_" + shape;
 	}
 	
 	

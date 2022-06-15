@@ -7,7 +7,16 @@ public class UpdateDonutCmd implements Command {
 	private Donut oldState;
 	private Donut newState;
 	private Donut original;
+	private String cmdLog;
 	
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
+
+	public String getCmdLog() {
+		return cmdLog;
+	}
 	
 	
 	
@@ -26,7 +35,7 @@ public class UpdateDonutCmd implements Command {
 		oldState.setEdgeColor(newState.getEdgeColor());
 		oldState.setInnerColor(newState.getInnerColor());
 		oldState.setSelected(newState.isSelected());
-		
+		cmdLog= "EXECUTE_UPDATE_" + original + "-->" + newState;
 	}
 
 	@Override
@@ -38,7 +47,7 @@ public class UpdateDonutCmd implements Command {
 		oldState.setEdgeColor(original.getEdgeColor());
 		oldState.setInnerColor(original.getInnerColor());
 		oldState.setSelected(original.isSelected());
-		
+		cmdLog = "UNEXECUTE_UPDATE_" + newState + "-->" + original;
 	}
 	
 	

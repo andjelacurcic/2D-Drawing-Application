@@ -8,6 +8,7 @@ public class Application {
 		frame.getView().setModel(model);
 		AppController controller = new AppController(model,frame);
 		frame.setController(controller);
+		controller.addPropertyChangeListener(controller);
 		frame.getBtnColorEdge().setBackground(controller.getEdgeColor());
 		frame.getBtnColorInner().setBackground(controller.getInnerColor());
 		frame.setVisible(true);

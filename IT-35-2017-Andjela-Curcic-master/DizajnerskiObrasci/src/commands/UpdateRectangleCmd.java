@@ -7,9 +7,19 @@ public class UpdateRectangleCmd implements Command{
 	private Rectangle oldState;
 	private Rectangle newState;
 	private Rectangle original;
+	private String cmdLog;
 	
 	
 	
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
+
+	public String getCmdLog() {
+		return cmdLog;
+	}
+
 	public UpdateRectangleCmd(Rectangle oldState, Rectangle newState) {
 		this.oldState = oldState;
 		this.newState = newState;
@@ -25,6 +35,8 @@ public class UpdateRectangleCmd implements Command{
 		oldState.setEdgeColor(newState.getEdgeColor());
 		oldState.setInnerColor(newState.getInnerColor());
 		oldState.setSelected(newState.isSelected());
+		
+		cmdLog= "EXECUTE_UPDATE_" + original + "-->" + newState;
 	}
 
 	@Override
@@ -36,6 +48,8 @@ public class UpdateRectangleCmd implements Command{
 		oldState.setEdgeColor(original.getEdgeColor());
 		oldState.setInnerColor(original.getInnerColor());
 		oldState.setSelected(original.isSelected());
+		
+		cmdLog = "UNEXECUTE_UPDATE_" + newState + "-->" + original;
 		
 	}
 	

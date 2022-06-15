@@ -8,7 +8,16 @@ public class BringToBackCmd implements Command {
 	private Shape shape;
 	private AppModel model;
 	private int index;
+	private String cmdLog;
 	
+	
+	public String getCmdLog() {
+		return cmdLog;
+	}
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
 	
 	
 	public BringToBackCmd(Shape shape, AppModel model) {
@@ -22,6 +31,7 @@ public class BringToBackCmd implements Command {
 		index = model.getIndex(shape);
 		model.remove(shape);
 		model.addShapeAtIndex(shape, 0);
+		cmdLog = "EXECUTE_BRING-TO-BACK_" + shape;
 		
 	}
 
@@ -31,7 +41,7 @@ public class BringToBackCmd implements Command {
 			return;
 		model.remove(shape);
 		model.addShapeAtIndex(shape, index);
-		
+		cmdLog = "UNEXECUTE_BRING-TO-BACK_" + shape;
 	}
 	
 	

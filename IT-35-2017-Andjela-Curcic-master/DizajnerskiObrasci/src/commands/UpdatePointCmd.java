@@ -9,10 +9,20 @@ public class UpdatePointCmd implements Command {
 	private Point original;
 	private String cmdLog;
 	
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
+
+	public String getCmdLog() {
+		return cmdLog;
+	}
+	
 	public UpdatePointCmd(Point oldState,Point newState) {
 		this.oldState=oldState;
 		this.newState=newState;
 		original = (Point) oldState.clone();
+		cmdLog= "EXECUTE_UPDATE_" + original + "-->" + newState;
 	}
 
 	@Override
@@ -29,6 +39,8 @@ public class UpdatePointCmd implements Command {
 		oldState.setY(original.getY());
 		oldState.setEdgeColor(original.getEdgeColor());
 		oldState.setSelected(original.isSelected());
+		cmdLog = "UNEXECUTE_UPDATE_" + newState + "-->" + original;
+
 	}
 	
 	

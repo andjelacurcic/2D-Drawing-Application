@@ -7,7 +7,16 @@ public class UpdateHexagonCmd implements Command {
 	private HexagonAdapter oldState;
 	private HexagonAdapter newState;
 	private HexagonAdapter original;
+	private String cmdLog;
 	
+	
+	public void setCmdLog(String cmdLog) {
+		this.cmdLog = cmdLog;
+	}
+
+	public String getCmdLog() {
+		return cmdLog;
+	}
 	
 	
 	public UpdateHexagonCmd(HexagonAdapter oldState, HexagonAdapter newState) {
@@ -24,6 +33,7 @@ public class UpdateHexagonCmd implements Command {
 		oldState.setEdgeColor(newState.getEdgeColor());
 		oldState.setInnerColor(newState.getInnerColor());
 		oldState.setSelected(newState.isSelected());
+		cmdLog= "EXECUTE_UPDATE_" + original + "-->" + newState;
 	}
 
 	@Override
@@ -34,6 +44,7 @@ public class UpdateHexagonCmd implements Command {
 		oldState.setEdgeColor(original.getEdgeColor());
 		oldState.setInnerColor(original.getInnerColor());
 		oldState.setSelected(original.isSelected());
+		cmdLog = "UNEXECUTE_UPDATE_" + newState + "-->" + original;
 		
 	}
 	
