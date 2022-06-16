@@ -58,7 +58,6 @@ public class Circle extends Shape {
 	}
 	public boolean contains(int x, int y) {
 		return this.getCenter().distance(x, y) <= r;
-
 	}
 	
 	public boolean contains(Point p) {
@@ -69,17 +68,19 @@ public class Circle extends Shape {
 		return "Circle Center(" + center.getX()+"|"+center.getY() + ")|Radius(" + r + ")|EdgeColor("+getEdgeColor().getRGB()+")|InnerColor("+getInnerColor().getRGB() + ")";
 	}
 	
+	
 	public boolean equals(Object obj) {
-		Circle temp;
-		if(obj instanceof Circle) {
-			temp = (Circle)obj;
-			if(r==temp.r && center==temp.center )
+		if (obj instanceof Circle) {
+			Circle c = (Circle) obj;
+			if (this.center.equals(c.getCenter()) && this.r == c.getR()) {
 				return true;
-			else
-				return false;}
-		else 
+			} else {
+				return false;
+			}
+		} else {
 			return false;
 		}
+	}
 	
 	@Override
 	public void moveBy(int x, int y) {
@@ -89,8 +90,9 @@ public class Circle extends Shape {
 	
 	@Override
 	public int compareTo(Object o) {
-		if (o instanceof Circle)
-			return (int)(this.area() - ((Circle)o).area());
+		if (o instanceof Circle) {
+			return (this.r - ((Circle) o).r);
+		}
 		return 0;
 	}
 

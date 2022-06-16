@@ -101,6 +101,7 @@ public class LogFile implements Strategy {
 					command = new AddShapeCmd(parseShape(cmdOperation[2]),model);
 					command.execute();
 					controller.getLog().addElement(((AddShapeCmd)command).getCmdLog());
+					model.getUndo().push(command);
 					break;
 				case "UPDATE":
 					String[] arrayOfShapes;
@@ -109,11 +110,14 @@ public class LogFile implements Strategy {
 						arrayOfShapes = cmdOperation[2].split("-->");
 						Point oldState = parsePoint(arrayOfShapes[0]);
 						Point newState = parsePoint(arrayOfShapes[1]);
+						System.out.println(oldState);
+						System.out.println(newState);
 						
 						index = model.getIndex(oldState);
 						command = new UpdatePointCmd((Point)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdatePointCmd)command).getCmdLog());
+						model.getUndo().push(command);
 						
 					}
 
@@ -126,19 +130,21 @@ public class LogFile implements Strategy {
 						command = new UpdateLineCmd((Line)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdateLineCmd)command).getCmdLog());
+						model.getUndo().push(command);
 
 					}
 					else if(cmdOperation[2].startsWith("Circle")) {
 						arrayOfShapes = cmdOperation[2].split("-->");
 						Circle oldState = parseCircle(arrayOfShapes[0]);
 						Circle newState = parseCircle(arrayOfShapes[1]);
-						
 						index = model.getIndex(oldState);
 						command = new UpdateCircleCmd((Circle)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdateCircleCmd)command).getCmdLog());
-
+						model.getUndo().push(command);
 					}
+					
+					
 					else if(cmdOperation[2].startsWith("Donut")) {
 						arrayOfShapes = cmdOperation[2].split("-->");
 						Donut oldState = parseDonut(arrayOfShapes[0]);
@@ -148,17 +154,19 @@ public class LogFile implements Strategy {
 						command = new UpdateDonutCmd((Donut)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdateDonutCmd)command).getCmdLog());
+						model.getUndo().push(command);
 
 					}
 					else if(cmdOperation[2].startsWith("Rectangle")) {
 						arrayOfShapes = cmdOperation[2].split("-->");
 						Rectangle oldState = parseRectangle(arrayOfShapes[0]);
 						Rectangle newState = parseRectangle(arrayOfShapes[1]);
-						
+			
 						index = model.getIndex(oldState);
 						command = new UpdateRectangleCmd((Rectangle)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdateRectangleCmd)command).getCmdLog());
+						model.getUndo().push(command);
 
 					}
 					else if(cmdOperation[2].startsWith("Hexagon")) {
@@ -170,6 +178,7 @@ public class LogFile implements Strategy {
 						command = new UpdateHexagonCmd((HexagonAdapter)model.getShape(index),newState);
 						command.execute();
 						controller.getLog().addElement(((UpdateHexagonCmd)command).getCmdLog());
+						model.getUndo().push(command);
 
 					} break;
 					
@@ -184,7 +193,7 @@ public class LogFile implements Strategy {
 					command = new DeleteShapesCmd((ArrayList)shapesForDelete, model);
 					command.execute();
 					controller.getLog().addElement(((DeleteShapesCmd)command).getCmdLog());
-
+					model.getUndo().push(command);
 					break;
 				
 				case "BRING-TO-BACK":
@@ -192,31 +201,32 @@ public class LogFile implements Strategy {
 					command = new BringToBackCmd(model.getShape(index),model);
 					command.execute();
 					controller.getLog().addElement(((BringToBackCmd)command).getCmdLog());
-
+					model.getUndo().push(command);
 					break;
 				case "BRING-TO-FRONT":
 					index = model.getIndex(parseShape(cmdOperation[2]));
 					command = new BringToFrontCmd(model.getShape(index),model);
 					command.execute();
 					controller.getLog().addElement(((BringToFrontCmd)command).getCmdLog());
-
+					model.getUndo().push(command);
 					break;
 				case "TO-FRONT":
 					index = model.getIndex(parseShape(cmdOperation[2]));
 					command = new ToFrontCmd(model.getShape(index),model);
 					command.execute();
 					controller.getLog().addElement(((ToFrontCmd)command).getCmdLog());
-
+					model.getUndo().push(command);
 					break;
 				case "TO-BACK":
 					index = model.getIndex(parseShape(cmdOperation[2]));
 					command = new ToBackCmd(model.getShape(index),model);
 					command.execute();
 					controller.getLog().addElement(((ToBackCmd)command).getCmdLog());
-
+					model.getUndo().push(command);
 					break;
-					
+				
 				}
+				
 			}
 			
 			else if(cmdOperation[0].equals("UNEXECUTE")) {
@@ -249,7 +259,7 @@ public class LogFile implements Strategy {
 				String e = cmdOperation[2];
 				String[] pointForSelect = e.split("\\|");
 				int x = Integer.parseInt(pointForSelect[0].replace("(", ""));
-				int y = Integer.parseInt(pointForSelect[1].replace("(", ""));
+				int y = Integer.parseInt(pointForSelect[1].replace(")", ""));
 				controller.selectDeselectShapeFormLog(x,y);
 
 			}
@@ -258,7 +268,7 @@ public class LogFile implements Strategy {
 				e.replace("(", "").replace(")", "");
 				String[] pointForDeselect = e.split("\\|");
 				int x = Integer.parseInt(pointForDeselect[0].replace("(", ""));
-				int y = Integer.parseInt(pointForDeselect[1].replace("(", ""));
+				int y = Integer.parseInt(pointForDeselect[1].replace(")", ""));
 				controller.selectDeselectShapeFormLog(x,y);
 			}
 			
@@ -306,15 +316,17 @@ public class LogFile implements Strategy {
 	
 	private Circle parseCircle(String shape) {
 		shape = shape.replace("Circle Center(", "").replace(")", "");
-		String[] params = shape.split("\\|");
+		
+		String [] params = shape.split("\\|");
 		
 		int x = Integer.parseInt(params[0]);
 		int y = Integer.parseInt(params[1]);
-		int r = Integer.parseInt(params[2].replace("Radius(",""));
-		Color  edgeColor = Color.decode(params[3].replace("EdgeColor(",""));
-		Color  innerColor = Color.decode(params[4].replace("InnerColor(",""));
-	
-		return new Circle(new Point(x,y), r, edgeColor,innerColor);
+		int r = Integer.parseInt(params[2].replace("Radius(", ""));
+		
+		Color edgeColor = Color.decode(params[3].replace("EdgeColor(", ""));
+		Color innerColor = Color.decode(params[4].replace("InnerColor(", ""));
+		
+		return new Circle(new Point(x, y), r, edgeColor, innerColor);
 	}
 	
 	private Donut parseDonut(String shape) {
@@ -323,10 +335,10 @@ public class LogFile implements Strategy {
 		
 		int x = Integer.parseInt(params[0]);
 		int y = Integer.parseInt(params[1]);
-		int r = Integer.parseInt(params[2].replace("Radius(",""));
-		int ir = Integer.parseInt(params[3].replace("InnerRadius(",""));
-		Color  edgeColor = Color.decode(params[4].replace("EdgeColor(",""));
-		Color  innerColor = Color.decode(params[5].replace("InnerColor(",""));
+		int r = Integer.parseInt(params[2].replace("Radius(", ""));
+		int ir = Integer.parseInt(params[3].replace("InnerRadius(", ""));
+		Color  edgeColor = Color.decode(params[4].replace("EdgeColor(", ""));
+		Color  innerColor = Color.decode(params[5].replace("InnerColor(", ""));
 	
 		return new Donut(new Point(x,y), r,ir, edgeColor,innerColor);
 	}
@@ -352,9 +364,9 @@ public class LogFile implements Strategy {
 		
 		int x = Integer.parseInt(params[0]);
 		int y = Integer.parseInt(params[1]);
-		int r = Integer.parseInt(params[2].replace("Radius(",""));
-		Color  edgeColor = Color.decode(params[3].replace("EdgeColor(",""));
-		Color  innerColor = Color.decode(params[4].replace("InnerColor(",""));
+		int r = Integer.parseInt(params[2].replace("Radius(", ""));
+		Color  edgeColor = Color.decode(params[3].replace("EdgeColor(", ""));
+		Color  innerColor = Color.decode(params[4].replace("InnerColor(", ""));
 	
 		return new HexagonAdapter(new Point(x,y), r, edgeColor,innerColor);
 	}

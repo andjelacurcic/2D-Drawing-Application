@@ -48,10 +48,13 @@ public class Donut extends Circle{
 	}
 	
 	public boolean contains(int x, int y) {
-		return super.contains(x, y) && center.distance(x, y) > innerRadius;
+		double dFromCenter = this.getCenter().distance(x, y);
+		return super.contains(x, y) && dFromCenter > innerRadius;
 	}
+	
 	public boolean contains(Point p) {
-		return this.contains(p.getX(), p.getY());
+		double dFromCenter = this.getCenter().distance(p.getX(), p.getY());
+		return super.contains(p.getX(), p.getY()) && dFromCenter > innerRadius;
 	}
 	
 	@Override
@@ -100,8 +103,27 @@ public class Donut extends Circle{
 		donut.setSelected(isSelected());
 		return donut;
 	}
+	public int compareTo(Object o) {
+		if (o instanceof Donut) {
+			return (int) (this.area() - ((Donut) o).area());
+		}
+		return 0;
+	}
 
-
+	public boolean equals(Object obj) {
+		if (obj instanceof Donut) {
+			Donut d = (Donut) obj;
+			if (this.getCenter().equals(d.getCenter()) &&
+					this.getR() == d.getR() &&
+					innerRadius == d.getInnerRadius()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 	
 
 }

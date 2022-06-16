@@ -76,17 +76,22 @@ public class AppController implements PropertyChangeListener{
 			
 		}
 		
+		if(evt.getPropertyName() == "Selected Shapes" || model.getSelectedShapes().size()==0)
+		{
+			frame.getBtnEdit().setVisible(false);
+			frame.getBtnDelete().setVisible(false);
+		}
+		
 		if((int) evt.getNewValue() == 1 && evt.getPropertyName() == "Selected Shapes" || model.getSelectedShapes().size()==1) {
 			frame.getBtnEdit().setVisible(true);
-
 		} 
 		else {
 			frame.getBtnEdit().setVisible(false);
 
 		}
 		
-	
-		if((int) evt.getNewValue() == 1 && evt.getPropertyName() == "Selected Shapes" || model.getSelectedShapes().size()>1) {
+
+		if((int) evt.getNewValue() == 1 && evt.getPropertyName() == "Selected Shapes" || model.getSelectedShapes().size()>=1) {
 			frame.getBtnDelete().setVisible(true);
 			
 		}
@@ -103,10 +108,12 @@ public class AppController implements PropertyChangeListener{
 	
 		if(evt.getPropertyName()=="Undo stack" && (int)evt.getNewValue()>0) {
 			frame.getBtnRedo().setVisible(true);
+			//frame.getBtnDelete().setVisible(true);
 		} else if((int) evt.getNewValue()== 0 && evt.getPropertyName() == "Undo stack") {
 			frame.getBtnUndo().setVisible(false);
 			
 		}
+		
 		if(evt.getPropertyName()=="Redo stack" && (int)evt.getNewValue()>0) {
 			frame.getBtnRedo().setVisible(true);
 			frame.getBtnUndo().setVisible(true);
@@ -366,21 +373,6 @@ public void edit(ActionEvent e) {
 				frame.getView().repaint();
 			}
 		}
-		else if(shape instanceof Circle) {
-			DlgCircle dlgCircle = new DlgCircle();
-			dlgCircle.setCircle((Circle) shape);
-			dlgCircle.setVisible(true);
-			
-			if(dlgCircle.getCircle() != null) {
-				frame.getBtnColorEdge().setBackground(dlgCircle.getEdgeColor());
-				frame.getBtnColorInner().setBackground(dlgCircle.getInnerColor());
-				UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd((Circle)shape,dlgCircle.getCircle());
-				updateCircleCmd.execute();
-				model.getUndo().push(updateCircleCmd);
-				log.addElement(updateCircleCmd.getCmdLog());
-				frame.getView().repaint();
-			}
-		}
 		else if(shape instanceof Donut) {
 			DlgDonut dlgDonut = new DlgDonut();
 			dlgDonut.setDonut((Donut) shape);
@@ -397,6 +389,22 @@ public void edit(ActionEvent e) {
 
 			}
 		}
+		else if(shape instanceof Circle) {
+			DlgCircle dlgCircle = new DlgCircle();
+			dlgCircle.setCircle((Circle) shape);
+			dlgCircle.setVisible(true);
+			
+			if(dlgCircle.getCircle() != null) {
+				frame.getBtnColorEdge().setBackground(dlgCircle.getEdgeColor());
+				frame.getBtnColorInner().setBackground(dlgCircle.getInnerColor());
+				UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd((Circle)shape,dlgCircle.getCircle());
+				updateCircleCmd.execute();
+				model.getUndo().push(updateCircleCmd);
+				log.addElement(updateCircleCmd.getCmdLog());
+				frame.getView().repaint();
+			}
+		}
+		
 		else if(shape instanceof HexagonAdapter) {
 			DlgHexagon dlgHexagon  = new DlgHexagon();
 			dlgHexagon.setHexagon((HexagonAdapter)shape);

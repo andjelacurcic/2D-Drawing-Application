@@ -51,6 +51,7 @@ public class AppModel {
 	}
 	
 	public Shape getShape(int index) {
+		System.out.println(index);
 		return shapes.get(index);
 	}
 	
