@@ -334,7 +334,7 @@ public class AppFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				controller.delete(e);
 				stateFrame = "edit";
-				getView().repaint();
+				//getView().repaint();
 
 			}
 		});

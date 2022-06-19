@@ -175,7 +175,7 @@ public class DlgRectangle extends JDialog {
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					int newX = Integer.parseInt(txtY.getText());
+					int newX = Integer.parseInt(txtX.getText());
 					int newY = Integer.parseInt(txtY.getText());
 					int newHeight = Integer.parseInt(txtHeight.getText());
 					int newWidth = Integer.parseInt(txtWidth.getText());

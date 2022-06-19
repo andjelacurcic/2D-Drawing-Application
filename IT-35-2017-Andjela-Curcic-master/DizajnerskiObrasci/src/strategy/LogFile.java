@@ -187,13 +187,16 @@ public class LogFile implements Strategy {
 					ArrayList<Shape> shapesForDelete = new ArrayList<Shape>();
 					String[] s = shapes.split(",");
 					
+					
+					
 					for(int i = 0;i<s.length;i++) {
 						shapesForDelete.add(parseShape(s[i].trim()));
 					}
-					command = new DeleteShapesCmd((ArrayList)shapesForDelete, model);
+					command = new DeleteShapesCmd(shapesForDelete, model);
 					command.execute();
 					controller.getLog().addElement(((DeleteShapesCmd)command).getCmdLog());
 					model.getUndo().push(command);
+					//shapesForDelete.clear();
 					break;
 				
 				case "BRING-TO-BACK":
@@ -261,6 +264,7 @@ public class LogFile implements Strategy {
 				int x = Integer.parseInt(pointForSelect[0].replace("(", ""));
 				int y = Integer.parseInt(pointForSelect[1].replace(")", ""));
 				controller.selectDeselectShapeFormLog(x,y);
+				
 
 			}
 			else if(cmdOperation[0].equals("DESELECT")) {

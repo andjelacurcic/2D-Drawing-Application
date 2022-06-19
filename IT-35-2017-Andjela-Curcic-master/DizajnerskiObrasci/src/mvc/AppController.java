@@ -55,6 +55,7 @@ public class AppController implements PropertyChangeListener{
 	private FileSerialization fileSerialization;
 	private DefaultListModel<String> log;
 	private LogFile logFile;
+	private boolean isRedo;
 	private PropertyChangeSupport propertyChangeSupport;
 	
 	
@@ -89,7 +90,10 @@ public class AppController implements PropertyChangeListener{
 			frame.getBtnEdit().setVisible(false);
 
 		}
-		
+		if((int) evt.getNewValue() == 1 && evt.getPropertyName() == "Deselected Shapes" || model.getSelectedShapes().size()==1) {
+			frame.getBtnEdit().setVisible(true);
+		} 
+			
 
 		if((int) evt.getNewValue() == 1 && evt.getPropertyName() == "Selected Shapes" || model.getSelectedShapes().size()>=1) {
 			frame.getBtnDelete().setVisible(true);
@@ -145,7 +149,7 @@ public class AppController implements PropertyChangeListener{
 	
 	public void state(MouseEvent e) {
 		int shapesize = model.getShapes().size();
-
+		
 		if(frame.getStateFrame()=="edit") {
 	
 		if(frame.getBtnOperationSelect().isSelected()) {
@@ -158,8 +162,6 @@ public class AppController implements PropertyChangeListener{
 			shape.setSelected(false);
 		});
 		if(frame.getBtnShapePoint().isSelected()) {
-			
-			
 			drawPoint(e);
 		}
 		if(frame.getBtnShapeLine().isSelected()) {
@@ -177,6 +179,10 @@ public class AppController implements PropertyChangeListener{
 		if(frame.getBtnShapeHexagon().isSelected()) {
 			drawHexagon(e);
 		}
+		
+		if(model.getRedo().isEmpty()) {
+			frame.getBtnRedo().setVisible(false);
+		}
 		frame.getBtnUndo().setVisible(true);
 		}
 		propertyChangeSupport.firePropertyChange("Shapes", shapesize,model.getShapes().size());
@@ -187,6 +193,8 @@ public class AppController implements PropertyChangeListener{
 	
 	public void drawPoint(MouseEvent e) {
 		
+		
+		
 		Point mouseClick = new Point(e.getX(),e.getY());
 		Point point = new Point(mouseClick.getX(),mouseClick.getY(),edgeColor);
 		
@@ -194,9 +202,12 @@ public class AppController implements PropertyChangeListener{
 		addShapeCmd = new AddShapeCmd(point,model);
 		addShapeCmd.execute();
 		model.getUndo().push(addShapeCmd);
+		System.out.println(model.getUndo());
 		log.addElement(addShapeCmd.getCmdLog());
 		frame.getView().repaint();
-	
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 	}
 	
 	public void drawLine(MouseEvent e) {
@@ -212,6 +223,9 @@ public class AppController implements PropertyChangeListener{
 		frame.getView().repaint();
 		log.addElement(addShapeCmd.getCmdLog());
 		model.setStartPoint(null);
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 		}
 		
 	}
@@ -231,6 +245,9 @@ public void drawRectangle(MouseEvent e) {
 			model.getUndo().push(addShapeCmd);
 			log.addElement(addShapeCmd.getCmdLog());
 			frame.getView().repaint();
+			if(!model.getRedo().isEmpty()) {
+				model.getRedo().clear();
+			}
 		} 
 		
 	}
@@ -250,6 +267,9 @@ public void drawRectangle(MouseEvent e) {
 			model.getUndo().push(addShapeCmd);
 			log.addElement(addShapeCmd.getCmdLog());
 			frame.getView().repaint();
+			if(!model.getRedo().isEmpty()) {
+				model.getRedo().clear();
+			}
 		} 
 	}
 	
@@ -268,6 +288,9 @@ public void drawDonut(MouseEvent e) {
 			model.getUndo().push(addShapeCmd);
 			log.addElement(addShapeCmd.getCmdLog());
 			frame.getView().repaint();
+			if(!model.getRedo().isEmpty()) {
+				model.getRedo().clear();
+			}
 		} 
 	}
 public void drawHexagon(MouseEvent e) {
@@ -285,6 +308,9 @@ public void drawHexagon(MouseEvent e) {
 		addShapeCmd.execute();
 		log.addElement(addShapeCmd.getCmdLog());
 		frame.getView().repaint();
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 	} 
 }
 
@@ -296,7 +322,10 @@ public void selectOperation(MouseEvent e) {
 	model.getShapes().forEach(shape -> {
 		if(shape.contains(e.getX(), e.getY())) {
 			if(shape.isSelected()) {
+				int selectedShapesSizeBefore = model.getSelectedShapes().size();
+
 				shape.setSelected(false);
+				propertyChangeSupport.firePropertyChange("Deselected Shapes", selectedShapesSizeBefore, model.getSelectedShapes().size());
 				log.addElement("DESELECT_" + shape + "|MouseClick_(" + e.getX() + "|" + e.getY()+")");
 			}
 			else {
@@ -342,6 +371,9 @@ public void edit(ActionEvent e) {
 				updatePointCmd.execute();
 				model.getUndo().push(updatePointCmd);
 				log.addElement(updatePointCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 			}
 		}
@@ -356,6 +388,9 @@ public void edit(ActionEvent e) {
 				updateLineCmd.execute();
 				model.getUndo().push(updateLineCmd);
 				log.addElement(updateLineCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 			}
 		}
@@ -370,6 +405,9 @@ public void edit(ActionEvent e) {
 				updateRecCmd.execute();
 				model.getUndo().push(updateRecCmd);
 				log.addElement(updateRecCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 			}
 		}
@@ -385,6 +423,9 @@ public void edit(ActionEvent e) {
 				updateDonutCmd.execute();
 				model.getUndo().push(updateDonutCmd);
 				log.addElement(updateDonutCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 
 			}
@@ -401,6 +442,9 @@ public void edit(ActionEvent e) {
 				updateCircleCmd.execute();
 				model.getUndo().push(updateCircleCmd);
 				log.addElement(updateCircleCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 			}
 		}
@@ -416,6 +460,9 @@ public void edit(ActionEvent e) {
 				updateHexagonCmd.execute();
 				model.getUndo().push(updateHexagonCmd);
 				log.addElement(updateHexagonCmd.getCmdLog());
+				if(!model.getRedo().isEmpty()) {
+					model.getRedo().clear();
+				}
 				frame.getView().repaint();
 
 			}
@@ -426,8 +473,6 @@ public void edit(ActionEvent e) {
 
 	public void delete(ActionEvent e) {
 		int selectedShapesSizeBefore = model.getSelectedShapes().size();
-
-		System.out.println("delete");
 		if(model.isEmpty())
 			return;
 		if(JOptionPane.showConfirmDialog(null, "Da li zaista zelite da obrisete?","Potvrda", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE)==0) {
@@ -436,6 +481,10 @@ public void edit(ActionEvent e) {
 			model.getUndo().push(deleteShapesCmd);
 			log.addElement(deleteShapesCmd.getCmdLog());
 			frame.getView().repaint();
+			if(!model.getRedo().isEmpty()) {
+				model.getRedo().clear();
+			}
+			System.out.println(model.getRedo());
 		}
 		propertyChangeSupport.firePropertyChange("Deleted shapes", selectedShapesSizeBefore, model.getSelectedShapes().size());
 
@@ -452,6 +501,9 @@ public void edit(ActionEvent e) {
 			toFront.execute();
 			model.getUndo().push(toFront);
 			log.addElement(toFront.getCmdLog());
+			if(!model.getRedo().isEmpty()) {
+				model.getRedo().clear();
+			}
 			frame.getView().repaint();
 		
 	}
@@ -466,6 +518,9 @@ public void edit(ActionEvent e) {
 		toBack.execute();
 		model.getUndo().push(toBack);
 		log.addElement(toBack.getCmdLog());
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 		frame.getView().repaint();
 	}
 	
@@ -478,6 +533,9 @@ public void edit(ActionEvent e) {
 		bringToFrontCmd.execute();
 		model.getUndo().push(bringToFrontCmd);
 		log.addElement(bringToFrontCmd.getCmdLog());
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 		frame.getView().repaint();
 	}
 
@@ -490,6 +548,9 @@ public void edit(ActionEvent e) {
 		bringToBackCmd.execute();
 		model.getUndo().push(bringToBackCmd);
 		log.addElement(bringToBackCmd.getCmdLog());
+		if(!model.getRedo().isEmpty()) {
+			model.getRedo().clear();
+		}
 		frame.getView().repaint();
 		
 	}
@@ -504,26 +565,28 @@ public void edit(ActionEvent e) {
 			command.unexecute();
 			commandHelp(command);
 			model.getRedo().push(command);
-			frame.getView().repaint();
+			frame.getView().repaint();	
 		}
 		propertyChangeSupport.firePropertyChange("Undo stack", shapesSizeBefore, model.getUndo().size());
-
-		
 	}
 
 	public void redo() {
+		
 		int shapesSizeBefore = model.getRedo().size();
-		if(model.getRedo().size()==-1)
-			return;
+		
 		if(!model.getRedo().isEmpty()) {
 			Command command = model.getRedo().pop();
+			
 			command.execute();
 			commandHelp(command);
 			model.getUndo().push(command);
+			
+			System.out.println("redo" + model.getRedo());
 			frame.getView().repaint();
+			
 		}
 		propertyChangeSupport.firePropertyChange("Redo stack", shapesSizeBefore, model.getRedo().size());
-
+		
 		
 	}
 
@@ -596,7 +659,7 @@ public void edit(ActionEvent e) {
 		if(command instanceof ToFrontCmd)
 			log.addElement(((ToFrontCmd)command).getCmdLog());
 		
-		return command;
+		return null;
 	}
 
 	public void selectDeselectShapeFormLog(int x, int y) {
@@ -604,6 +667,7 @@ public void edit(ActionEvent e) {
 		
 		MouseEvent e = new MouseEvent(frame.getView(),MouseEvent.MOUSE_CLICKED,System.currentTimeMillis(),0,x,y,1,false);
 		selectOperation(e);
+		
 		//state(e);
 		
 	}

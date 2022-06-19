@@ -10,8 +10,8 @@ public class DeleteShapesCmd implements Command {
 	private AppModel model;
 	private List<Shape> shapesForDelete;
 	private String cmdLog;
-	
-	
+
+
 	public String getCmdLog() {
 		return cmdLog;
 	}
@@ -36,7 +36,6 @@ public class DeleteShapesCmd implements Command {
 
 	@Override
 	public void unexecute() {
-		
 		shapesForDelete.forEach(shape -> {
 			model.addShape(shape);
 			shape.setSelected(true);
