@@ -185,6 +185,11 @@ public class DlgDonut extends JDialog{
 					int newRadius = Integer.parseInt(txtRadius.getText());
 					int newInnerRadius = Integer.parseInt(txtInnerRadius.getText());
 					
+					if( newRadius<newInnerRadius) {
+						JOptionPane.showMessageDialog(null, "Uneli ste pogresne podatke");
+						return;
+					}
+					
 					if(newX <0 || newY<0 || newRadius<0 || newInnerRadius<0) {
 						JOptionPane.showMessageDialog(null, "Uneli ste pogresne podatke");
 						return;

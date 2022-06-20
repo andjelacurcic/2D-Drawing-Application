@@ -160,6 +160,9 @@ public class AppController implements PropertyChangeListener{
 			frame.getBtnOperationDrawing().setSelected(true);
 		model.getSelectedShapes().forEach(shape -> {
 			shape.setSelected(false);
+			log.addElement("DESELECT_" + shape + "|MouseClick_(" + e.getX() + "|" + e.getY()+")");
+
+			
 		});
 		if(frame.getBtnShapePoint().isSelected()) {
 			drawPoint(e);
@@ -350,7 +353,7 @@ public void selectOperation(MouseEvent e) {
 	int index = model.getSelected();
 	if(index == -1) return;
 	
-	Shape shape = model.getShape(index);
+	//Shape shape = model.getShape(index);
 }
 
 public void edit(ActionEvent e) {
